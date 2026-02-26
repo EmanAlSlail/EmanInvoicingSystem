@@ -15,9 +15,15 @@
   --color-indigo-900: #001f3f;
 }
 
+/* Force dark mode variant to use .dark class in Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   body {
-    @apply bg-[#F8F9FA] text-slate-900 antialiased;
+    @apply bg-[#F8F9FA] text-slate-900 antialiased transition-colors duration-200;
+  }
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
   }
 }
 
@@ -30,11 +36,25 @@
 }
 
 @media print {
-  .no-print {
+  .no-print, header, aside, button, .flex.gap-2 {
     display: none !important;
   }
   body {
     background: white !important;
+    margin: 0;
+    padding: 0;
+  }
+  #invoice-template, #invoice-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: white !important;
+    color: black !important;
   }
   .invoice-preview-container {
     box-shadow: none !important;

@@ -181,7 +181,7 @@ const InvoiceTemplate = ({ invoice, company, contact, lang }: { invoice: Invoice
   if (!company) return <div className="p-8 text-center text-slate-400">Select a company to see preview</div>;
 
   return (
-    <div className={cn("bg-white text-slate-800 font-sans p-10 max-w-[800px] mx-auto border border-slate-100 shadow-sm rounded-sm", isAr ? "rtl" : "ltr")} dir={isAr ? "rtl" : "ltr"}>
+    <div id="invoice-template" className={cn("bg-white text-slate-800 font-sans p-10 max-w-[800px] mx-auto border border-slate-100 shadow-sm rounded-sm", isAr ? "rtl" : "ltr")} dir={isAr ? "rtl" : "ltr"}>
       {/* Header */}
       <div className="flex justify-between items-start border-b-2 border-slate-800 pb-8 mb-8">
         <div className="space-y-2">
@@ -410,7 +410,7 @@ const Dashboard = ({ invoices, contacts, products, t, theme }: { invoices: Invoi
                     color: theme === 'dark' ? '#f1f5f9' : '#1e293b'
                   }}
                 />
-                <Bar dataKey="revenue" fill="#4f46e5" radius={[4, 4, 0, 0]} barSize={20} />
+                <Bar dataKey="revenue" fill="#0066cc" radius={[4, 4, 0, 0]} barSize={20} />
                 <Bar dataKey="tax" fill="#10b981" radius={[4, 4, 0, 0]} barSize={20} />
               </BarChart>
             </ResponsiveContainer>
@@ -1296,8 +1296,16 @@ export default function App() {
 
   // Theme Effect
   useEffect(() => {
-    if (theme === 'dark') document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.setAttribute('data-theme', 'dark');
+      root.style.colorScheme = 'dark';
+    } else {
+      root.classList.remove('dark');
+      root.setAttribute('data-theme', 'light');
+      root.style.colorScheme = 'light';
+    }
   }, [theme]);
 
   // Load Initial Data
@@ -1472,7 +1480,7 @@ export default function App() {
 
   return (
     <div className={cn("flex min-h-screen", lang === 'ar' ? "flex-row-reverse" : "flex-row")}>
-      <aside className="w-72 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 p-6 flex flex-col sticky top-0 h-screen">
+      <aside className="no-print w-72 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 p-6 flex flex-col sticky top-0 h-screen">
         <div className="flex items-center gap-3 mb-10">
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white"><FileText /></div>
           <div className="flex flex-col">
@@ -1518,7 +1526,7 @@ export default function App() {
         </div>
       </aside>
       <main className="flex-1 flex flex-col min-w-0 bg-slate-50 dark:bg-slate-950">
-        <header className="h-20 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
+        <header className="no-print h-20 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 px-8 flex items-center justify-between sticky top-0 z-10">
           <div className="flex items-center gap-4">
             <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 capitalize">{t(activeTab)}</h2>
           </div>
@@ -1548,7 +1556,7 @@ export default function App() {
               {activeTab === 'create-invoice' && <InvoiceBuilder companies={companies} contacts={contacts} invoices={invoices} setInvoices={setInvoices} setActiveTab={setActiveTab} lang={lang} t={t} />}
               {activeTab === 'view-invoice' && selectedInvoice && (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between no-print">
                     <Button variant="ghost" icon={ArrowLeft} onClick={() => setActiveTab('invoices')}>Back to Invoices</Button>
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm" icon={Printer} onClick={() => window.print()}>{t('print')}</Button>
