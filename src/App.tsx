@@ -794,10 +794,14 @@ const InvoiceBuilder = ({ companies, contacts, invoices, setInvoices, setActiveT
     }
     
     const company = companies.find(c => c.id === formData.companyId)!;
+    
+    // Ensure ISO 8601 format: YYYY-MM-DDTHH:mm:ssZ
+    const isoDateTime = `${formData.date}T${formData.time}:00Z`;
+    
     const qrData = generateZatcaQRData(
       company.nameAr,
       company.vat || '',
-      `${formData.date}T${formData.time}:00Z`,
+      isoDateTime,
       total.toFixed(2),
       tax.toFixed(2)
     );
@@ -950,6 +954,19 @@ const InvoiceBuilder = ({ companies, contacts, invoices, setInvoices, setActiveT
                       newItems[idx].tax = Number(e.target.value);
                       setFormData({...formData, items: newItems});
                     }} />
+                    {formData.invoiceType === 'complex' && (
+                      <Select label={t('unit')} value={item.unit || 'pcs'} onChange={e => {
+                        const newItems = [...formData.items!];
+                        newItems[idx].unit = e.target.value;
+                        setFormData({...formData, items: newItems});
+                      }} options={[
+                        { value: 'pcs', label: 'Pcs' },
+                        { value: 'kg', label: 'Kg' },
+                        { value: 'm', label: 'Meter' },
+                        { value: 'hour', label: 'Hour' },
+                        { value: 'service', label: 'Service' }
+                      ]} />
+                    )}
                   </div>
                   <Button variant="danger" size="sm" onClick={() => {
                     const newItems = formData.items!.filter((_, i) => i !== idx);
